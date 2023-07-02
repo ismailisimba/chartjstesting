@@ -74,7 +74,7 @@ const options = {
               text:"Value in USD"
           },
           ticks:{
-
+              stepSize:100000,
           }
         },
         x: {
