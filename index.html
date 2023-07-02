@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+
+        #chartwindow{
+            display: block;
+            position: relative;
+            margin: 0 auto;
+            min-width: 250px;
+            width: 75%;
+            height: 69vh;
+            min-height: 250px;
+        }
+        #chartoptions{
+            display: block;
+            position: relative;
+            margin: 0 auto;
+            margin-top: 69px;
+            min-width: 250px;
+            width: 75%;
+        }
+
+    </style>
+
+</head>
+<body>
+    <div id="chartoptions">
+        <label for="plan-select">Chart Options:</label>
+
+        <select name="plans" id="plan-select">
+            <option value="def">--Please choose a chart--</option>
+            <option value="chart1">Opportunities by Value ($)</option>
+        </select>
+
+    </div>
+<div id="chartwindow">
+  <canvas id="myChart"></canvas>
+</div>
+<script src="./script.js"></script>
+</body>
