@@ -5,10 +5,35 @@ const labelArray = ['AECF Black water red sand green forests and some other biom
 const labelName = ['Opportunities by Value (USD)']
 
 getMaxValueForChart=(arr=[1,2,3])=>{
-    const max = arr.reduce((a, b) => Math.max(a, b), -Infinity);
-    const newmax = max*1.2;
+    const maxy = arr.reduce((a, b) => Math.max(a, b), -Infinity);
+    const newmax = maxy*1.2;
+    console.log("Iran")
+    console.log(newmax);
     return newmax;
 }
+
+
+
+const plugin = {
+    id: 'customCanvasBackgroundColor',
+    beforeDraw: (chart, args, options) => {
+        var axis = chart.scales['x'] || chart.scales['y'];
+    
+        // Loop through each tick
+        axis.ticks.forEach(function (tick, index, ticks) {
+          var MAX_LABEL_LENGTH = 15; // Maximum length of the label before truncation
+          var label = tick.label;
+          
+          // Truncate the label if it's too long
+          if (label.length > MAX_LABEL_LENGTH) {
+            ticks[index].label = label.substring(0, MAX_LABEL_LENGTH) + '...';
+          }
+        });
+    }
+  };
+
+
+
 
 
 
@@ -25,84 +50,56 @@ const options = {
     },
     options: {
        plugins: {
-          enabled:true,
-          tooltip: {
-              enabled: true,
-              callbacks: {
-                  label: (context)=> {
-                      let label = context.dataset.label || '';
-                        console.log("lll")
-                      if (label) {
-                          label += ': ';
-                      }
-                      if (context.parsed.y !== null) {
-                          label += new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(context.parsed.y);
-                      }
-                      return label;
-                  }
-              }
+        enabled:true,
+        tooltip: {
+            enabled:true,
+            callbacks: {
+                label: (context)=> {
+                    const obj = context;
+                    return obj.formattedValue
+                        }
+                 }
+        },
+        customCanvasBackgroundColor: {
+            color: 'lightGreen',
           }
-      },
-      scales: {
-          y: {
-            beginAtZero: true,
-            min:0,
-            max:getMaxValueForChart(dataArray),
-            title:{
-                display:true,
-                text:"Value in USD"
-            }
+    },
+    scales: {
+        y: {
+          beginAtZero: true,
+          min:0,
+          max:getMaxValueForChart(dataArray),
+          title:{
+              display:true,
+              text:"Value in USD"
           },
-          x: {
-            title:{
-                display:true,
-                text:"Opportunities"
-            }
+          ticks:{
+
           }
+        },
+        x: {
+          title:{
+              display:true,
+              text:"Opportunities"
+          },
+          ticks:{
+              /*callback(value, index, ticks, xyz){
+                  console.log(ticks);
+                  console.log(this);
+                  return value;
+              }*/
+
+          }
+          
         }
+      },
+        },
+        plugins: [plugin]
     }
-  }
+  
 
 
 
 const ctx = document.getElementById('myChart').getContext("2d");
 
-//new Chart(ctx,options);
-
-
-const chart = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: labelArray,
-      datasets: [{
-        label: labelName,
-        data: dataArray,
-        borderWidth: 1
-      }]
-    },
-    options: {
-        plugins: {
-            tooltip: {
-                callbacks: {
-                    label: function(context) {
-                        let label = context.dataset.label || '';
-
-                        if (label) {
-                            label += ': ';
-                        }
-                        if (context.parsed.y !== null) {
-                            label += new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(context.parsed.y);
-                        }
-                        return label;
-                    }
-                }
-            }
-        }
-    }
-});
-
-
-
-const image = new Image();
-image.src = chart.toBase64Image();;
-document.body.appendChild(image);
+new Chart(ctx,options);
