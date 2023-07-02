@@ -29,9 +29,9 @@ const options = {
           tooltip: {
               enabled: true,
               callbacks: {
-                  label: function(context) {
+                  label: (context)=> {
                       let label = context.dataset.label || '';
-  
+                        console.log("lll")
                       if (label) {
                           label += ': ';
                       }
@@ -67,6 +67,42 @@ const options = {
 
 const ctx = document.getElementById('myChart').getContext("2d");
 
-new Chart(ctx,options);
+//new Chart(ctx,options);
 
 
+const chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: labelArray,
+      datasets: [{
+        label: labelName,
+        data: dataArray,
+        borderWidth: 1
+      }]
+    },
+    options: {
+        plugins: {
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        let label = context.dataset.label || '';
+
+                        if (label) {
+                            label += ': ';
+                        }
+                        if (context.parsed.y !== null) {
+                            label += new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(context.parsed.y);
+                        }
+                        return label;
+                    }
+                }
+            }
+        }
+    }
+});
+
+
+
+const image = new Image();
+image.src = chart.toBase64Image();;
+document.body.appendChild(image);
